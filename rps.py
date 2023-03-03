@@ -59,22 +59,7 @@ choices = ["Rock", "Paper", "Scissors"]
 
 
 while running: 
-    # make computer run at fps tick 
-    clock.tick(FPS)
-    ######## draw ###########
-    # fill background with black 
-    screen.fill(BLACK)
-    screen.blit(rock_image, rock_image_rect)
-    rock_image_rect.x = 50
-    rock_image_rect.y = 50
-    screen.blit(paper_image, paper_image_rect)
-    paper_image_rect.x = 800
-    paper_image_rect.y = 50
-    screen.blit(scissors_image, scissors_image_rect)
-    scissors_image_rect.x = 400
-    scissors_image_rect.y = 400
-    pg.display.flip()
-
+    
     # close loop and game when quit event occurs
     for event in pg.event.get(): 
         # listening for quiting event 
@@ -106,47 +91,88 @@ while running:
             print(scissors_image_rect.collidepoint(mouse_coords))
     
     ######## User input ##########
-        if player_choice == "":
-            screen.blit(rock_image, rock_image_rect) 
-            screen.blit(paper_image, paper_image_rect)
-            screen.blit(scissors_image, scissors_image_rect)
-        elif player_choice == "Rock":
-            screen.blit(rock_image,rock_image_rect)
-            rock_image_rect.x = 100
-            rock_image_rect.y = 150
-            paper_image_rect.x = 2000
-            paper_image_rect.y = 2000
-            scissors_image_rect.x = 2000
-            scissors_image_rect.y = 2000
-        elif player_choice == "Paper":
-            screen.blit(paper_image,paper_image_rect)
-            paper_image_rect.x = 100
-            paper_image_rect.y = 150
-            rock_image_rect.x = 2000
-            rock_image_rect.y = 2000
-            scissors_image_rect.x = 2000
-            scissors_image_rect.y = 2000
-        elif player_choice == "Scissors":
-            screen.blit(scissors_image,scissors_image_rect)
-            scissors_image_rect.x = 100
-            scissors_image_rect.y = 150
-            rock_image_rect.x = 2000
-            rock_image_rect.y = 2000
-            scissors_image_rect.x = 2000
-            scissors_image_rect.y = 2000
-        else: 
-            print("Please pick a choice... ")
-            break 
-    
+            if player_choice == "":
+                screen.blit(rock_image, rock_image_rect) 
+                screen.blit(paper_image, paper_image_rect)
+                screen.blit(scissors_image, scissors_image_rect)
+            elif player_choice == "Rock":
+                screen.blit(rock_image,rock_image_rect)
+                rock_image_rect.x = 100
+                rock_image_rect.y = 150
+                paper_image_rect.x = 2000
+                paper_image_rect.y = 2000
+                scissors_image_rect.x = 2000
+                scissors_image_rect.y = 2000
+            elif player_choice == "Paper":
+                screen.blit(paper_image,paper_image_rect)
+                paper_image_rect.x = 100
+                paper_image_rect.y = 150
+                rock_image_rect.x = 2000
+                rock_image_rect.y = 2000
+                scissors_image_rect.x = 2000
+                scissors_image_rect.y = 2000
+            elif player_choice == "Scissors":
+                screen.blit(scissors_image,scissors_image_rect)
+                scissors_image_rect.x = 100
+                scissors_image_rect.y = 150
+                rock_image_rect.x = 2000
+                rock_image_rect.y = 2000
+                scissors_image_rect.x = 2000
+                scissors_image_rect.y = 2000
+            else: 
+                print("Please pick a choice... ")
+                break 
+            '''
     ######## Computer Choice ########
+        def cpu_randchoice():
+            computer_choice = (choices[randint(0,2)])
+            print("The computer randomly chose " + computer_choice + ".")
+            if computer_choice == choices[0]:
+                screen.blit(rock_image,rock_image_rect)
+                rock_image_rect.x = 800
+                rock_image_rect.y = 150 
+            elif computer_choice == choices[1]:
+                screen.blit(paper_image,paper_image_rect)
+                paper_image_rect.x = 800
+                paper_image_rect.y = 150 
+            elif computer_choice == choices[2]:
+                screen.blit(scissors_image,scissors_image_rect)
+                scissors_image_rect.x = 800
+                scissors_image_rect.y = 150 
+            else: 
+                print("bruh")
 
-    def cpu_randchoice():
-        computer_choice = (choices[randint(0,2)])
-        print("The computer chose " + computer_choice + ".")
-        return computer_choice
-    
+            return computer_choice
+            '''
+        
+
+        
+     
+    clock.tick(FPS)
+    ######## draw ###########
+    # fill background with black 
+    screen.fill(BLACK)
+    screen.blit(rock_image, rock_image_rect)
+    rock_image_rect.x = 50
+    rock_image_rect.y = 50
+    screen.blit(paper_image, paper_image_rect)
+    paper_image_rect.x = 800
+    paper_image_rect.y = 50
+    screen.blit(scissors_image, scissors_image_rect)
+    scissors_image_rect.x = 400
+    scissors_image_rect.y = 400
+    pg.display.flip()      
+    pg.QUIT 
+
+
+ 
+
+
+
+
     
     
     
 
-pg.QUIT
+        
+
