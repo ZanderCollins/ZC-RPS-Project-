@@ -17,6 +17,25 @@ import os
 game_folder = os.path.dirname(__file__)
 print(game_folder)
 
+global player_choice
+global computer_choice
+player_choice = ""
+computer_choice = ""
+choices = ["Rock", "Paper", "Scissors"]
+
+def cpu_randchoice():
+    computer_choice = (choices[randint(0,2)])
+    print("The computer randomly chose " + computer_choice + ".")
+    return computer_choice 
+
+def draw_text(text, size, color, x, y):
+    font_name = pg.font.match_font('times new roman')
+    font = pg.font.Font(font_name, size)
+    text_surface = font.render(text, True, color)
+    text_rect = text_surface.get_rect()
+    text_rect.midtop = (x,y)
+    screen.blit(text_surface, text_rect)
+
 # game settings
 WIDTH = 1280
 HEIGHT = 720
@@ -30,9 +49,7 @@ GREEN = (0,255,0)
 BLUE = (0,0,255)
 
 pg.init()
-
 pg.mixer.init()
-
 # sets dimensions for screen
 screen = pg.display.set_mode((WIDTH, HEIGHT))
 pg.display.set_caption("Rock, Paper, Scissors")
@@ -51,14 +68,10 @@ scissors_image_rect = scissors_image.get_rect()
 
 # boulean loop for if the program is running
 running = True 
-global player_choice
-global computer_choice
-player_choice = ""
-computer_choice = ""
-choices = ["Rock", "Paper", "Scissors"]
-
+game_start = True 
 
 while running: 
+    clock.tick(FPS) 
     
     # close loop and game when quit event occurs
     for event in pg.event.get(): 
@@ -66,6 +79,12 @@ while running:
         if event.type == pg.QUIT: 
             # if quit, program stops 
             running = False 
+        
+        if event.type == pg.KEYDOWN:
+            if event.key == pg.K_SPACE:
+                print("The game started")
+                game_start = True
+
         # assigns event to when mouse botton is clicked 
         if event.type == pg.MOUSEBUTTONUP: 
             # prints and stores the first or x value of the coordinate touple
@@ -90,78 +109,82 @@ while running:
             print(paper_image_rect.collidepoint(mouse_coords))
             print(scissors_image_rect.collidepoint(mouse_coords))
     
-    ######## User input ##########
-            if player_choice == "":
-                screen.blit(rock_image, rock_image_rect) 
-                screen.blit(paper_image, paper_image_rect)
-                screen.blit(scissors_image, scissors_image_rect)
-            elif player_choice == "Rock":
-                screen.blit(rock_image,rock_image_rect)
-                rock_image_rect.x = 100
-                rock_image_rect.y = 150
-                paper_image_rect.x = 2000
-                paper_image_rect.y = 2000
-                scissors_image_rect.x = 2000
-                scissors_image_rect.y = 2000
-            elif player_choice == "Paper":
-                screen.blit(paper_image,paper_image_rect)
-                paper_image_rect.x = 100
-                paper_image_rect.y = 150
-                rock_image_rect.x = 2000
-                rock_image_rect.y = 2000
-                scissors_image_rect.x = 2000
-                scissors_image_rect.y = 2000
-            elif player_choice == "Scissors":
-                screen.blit(scissors_image,scissors_image_rect)
-                scissors_image_rect.x = 100
-                scissors_image_rect.y = 150
-                rock_image_rect.x = 2000
-                rock_image_rect.y = 2000
-                scissors_image_rect.x = 2000
-                scissors_image_rect.y = 2000
-            else: 
-                print("Please pick a choice... ")
-                break 
-            '''
-    ######## Computer Choice ########
-        def cpu_randchoice():
-            computer_choice = (choices[randint(0,2)])
-            print("The computer randomly chose " + computer_choice + ".")
-            if computer_choice == choices[0]:
-                screen.blit(rock_image,rock_image_rect)
-                rock_image_rect.x = 800
-                rock_image_rect.y = 150 
-            elif computer_choice == choices[1]:
-                screen.blit(paper_image,paper_image_rect)
-                paper_image_rect.x = 800
-                paper_image_rect.y = 150 
-            elif computer_choice == choices[2]:
-                screen.blit(scissors_image,scissors_image_rect)
-                scissors_image_rect.x = 800
-                scissors_image_rect.y = 150 
-            else: 
-                print("bruh")
-
-            return computer_choice
-            '''
-        
-
-        
-     
-    clock.tick(FPS)
     ######## draw ###########
     # fill background with black 
     screen.fill(BLACK)
-    screen.blit(rock_image, rock_image_rect)
-    rock_image_rect.x = 50
-    rock_image_rect.y = 50
-    screen.blit(paper_image, paper_image_rect)
-    paper_image_rect.x = 800
-    paper_image_rect.y = 50
-    screen.blit(scissors_image, scissors_image_rect)
-    scissors_image_rect.x = 400
-    scissors_image_rect.y = 400
-    pg.display.flip()      
+
+    if  game_start == True:
+        draw_text("Press space to play rock paper scissors.", 16, WHITE, 600, 300)
+        rock_image_rect.x = 2000
+        paper_image_rect.x = 2000
+        scissors_image_rect.x = 2000
+    
+    if  game_start == True and player_choice == "": 
+        screen.blit(rock_image, rock_image_rect)
+        rock_image_rect.x = 50
+        rock_image_rect.y = 50
+        screen.blit(paper_image, paper_image_rect)
+        paper_image_rect.x = 800
+        paper_image_rect.y = 50
+        screen.blit(scissors_image, scissors_image_rect)
+        scissors_image_rect.x = 400
+        scissors_image_rect.y = 400
+    
+    '''
+    
+    ######## User input ##########
+    if player_choice == "":
+        screen.blit(rock_image, rock_image_rect) 
+        screen.blit(paper_image, paper_image_rect)
+        screen.blit(scissors_image, scissors_image_rect)
+    elif player_choice == "Rock":
+        screen.blit(rock_image,rock_image_rect)
+        rock_image_rect.x = 100
+        rock_image_rect.y = 150
+        paper_image_rect.x = 2000
+        paper_image_rect.y = 2000
+        scissors_image_rect.x = 2000
+        scissors_image_rect.y = 2000
+        computer_choice = cpu_randchoice() 
+    elif player_choice == "Paper":
+        screen.blit(paper_image,paper_image_rect)
+        paper_image_rect.x = 100
+        paper_image_rect.y = 150
+        rock_image_rect.x = 2000
+        rock_image_rect.y = 2000
+        scissors_image_rect.x = 2000
+        scissors_image_rect.y = 2000
+        computer_choice = cpu_randchoice() 
+    elif player_choice == "Scissors":
+        screen.blit(scissors_image,scissors_image_rect)
+        scissors_image_rect.x = 100
+        scissors_image_rect.y = 150
+        rock_image_rect.x = 2000
+        rock_image_rect.y = 2000
+        scissors_image_rect.x = 2000
+        scissors_image_rect.y = 2000
+        computer_choice = cpu_randchoice() 
+    else: 
+        print("Please pick a choice... ")
+        
+
+    if computer_choice == choices[0]:
+        screen.blit(rock_image,rock_image_rect)
+        rock_image_rect.x = 800
+        rock_image_rect.y = 150 
+    elif computer_choice == choices[1]:
+        screen.blit(paper_image,paper_image_rect)
+        paper_image_rect.x = 800
+        paper_image_rect.y = 150 
+    elif computer_choice == choices[2]:
+        screen.blit(scissors_image,scissors_image_rect)
+        scissors_image_rect.x = 800
+        scissors_image_rect.y = 150 
+    else: 
+        break
+            
+    '''
+
     pg.QUIT 
 
 
