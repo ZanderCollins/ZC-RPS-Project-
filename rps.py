@@ -1,4 +1,5 @@
 # File created by: Zander Collins 
+# created for Git Hub
 
 # import from libraires
 
@@ -36,6 +37,14 @@ def draw_text(text, size, color, x, y):
     text_rect.midtop = (x,y)
     screen.blit(text_surface, text_rect)
 
+def run_once(f):
+    def wrapper(*args, **kwargs):
+        if not wrapper.has_run:
+            wrapper.has_run = True
+            return f(*args, **kwargs)
+    wrapper.has_run = False
+    return wrapper
+
 # game settings
 WIDTH = 1280
 HEIGHT = 720
@@ -56,34 +65,42 @@ pg.display.set_caption("Rock, Paper, Scissors")
 # aligns the clock time with fps time
 clock = pg.time.Clock()
 # loads the chosen file and stores the image data
-rock_image = pg.image.load(os.path.join(game_folder,'Rock.jpg')).convert()
 # allows for the image data (pixel location,number,color) to be changed
+rock_image = pg.image.load(os.path.join(game_folder,'Rock.jpg')).convert()
 rock_image_rect = rock_image.get_rect()
+
+cpu_rock_image = pg.image.load(os.path.join(game_folder,'Rock_cpu.jpg')).convert()
+cpu_rock_image_rect = cpu_rock_image.get_rect()
 
 paper_image = pg.image.load(os.path.join(game_folder,'Paper.jpg')).convert()
 paper_image_rect = paper_image.get_rect()
 
+cpu_paper_image = pg.image.load(os.path.join(game_folder,'Paper_cpu.jpg')).convert()
+cpu_paper_image_rect = cpu_paper_image.get_rect()
+
 scissors_image = pg.image.load(os.path.join(game_folder,'Scissors.jpg')).convert()
 scissors_image_rect = scissors_image.get_rect()
+
+cpu_scissors_image = pg.image.load(os.path.join(game_folder,'Scissors_cpu.jpg')).convert()
+cpu_scissors_image_rect = cpu_scissors_image.get_rect()
+
+
+
 
 # boulean loop for if the program is running
 running = True 
 game_start = True 
 
+
 while running: 
     clock.tick(FPS) 
-    
+
     # close loop and game when quit event occurs
     for event in pg.event.get(): 
         # listening for quiting event 
         if event.type == pg.QUIT: 
             # if quit, program stops 
             running = False 
-        
-        if event.type == pg.KEYDOWN:
-            if event.key == pg.K_SPACE:
-                print("The game started")
-                game_start = True
 
         # assigns event to when mouse botton is clicked 
         if event.type == pg.MOUSEBUTTONUP: 
@@ -96,14 +113,17 @@ while running:
             # returns boolean value for clicking on image 
             print(rock_image_rect.collidepoint(mouse_coords))
             if rock_image_rect.collidepoint(mouse_coords):
-                print("You clicked on Rock... ")
+                print("Player choice = Rock ")
                 player_choice = "Rock"
+                computer_choice = cpu_randchoice()
             elif paper_image_rect.collidepoint(mouse_coords):
-                print("You clicked on Paper... ")
+                print("Player choice = Paper ")
                 player_choice = "Paper"
+                computer_choice = cpu_randchoice()
             elif scissors_image_rect.collidepoint(mouse_coords):
-                print("You clicked on Scissors... ")
+                print("Player choice = Scissors ")
                 player_choice = "Scissors"
+                computer_choice = cpu_randchoice()
             else: 
                 print("You did not click on anything... ")
             print(paper_image_rect.collidepoint(mouse_coords))
@@ -112,14 +132,8 @@ while running:
     ######## draw ###########
     # fill background with black 
     screen.fill(BLACK)
-
-    if  game_start == True:
-        draw_text("Press space to play rock paper scissors.", 16, WHITE, 600, 300)
-        rock_image_rect.x = 2000
-        paper_image_rect.x = 2000
-        scissors_image_rect.x = 2000
     
-    if  game_start == True and player_choice == "": 
+    if  game_start == True: 
         screen.blit(rock_image, rock_image_rect)
         rock_image_rect.x = 50
         rock_image_rect.y = 50
@@ -129,73 +143,98 @@ while running:
         screen.blit(scissors_image, scissors_image_rect)
         scissors_image_rect.x = 400
         scissors_image_rect.y = 400
-    
-    '''
-    
-    ######## User input ##########
-    if player_choice == "":
-        screen.blit(rock_image, rock_image_rect) 
+
+    if player_choice == "": 
+        screen.blit(rock_image, rock_image_rect)
+        rock_image_rect.x = 50
+        rock_image_rect.y = 50
         screen.blit(paper_image, paper_image_rect)
+        paper_image_rect.x = 800
+        paper_image_rect.y = 50
         screen.blit(scissors_image, scissors_image_rect)
-    elif player_choice == "Rock":
-        screen.blit(rock_image,rock_image_rect)
+        scissors_image_rect.x = 400
+        scissors_image_rect.y = 400
+        draw_text("Click to choose:", 30, WHITE, 625, 200)
+
+    if player_choice == "Rock": 
         rock_image_rect.x = 100
         rock_image_rect.y = 150
         paper_image_rect.x = 2000
         paper_image_rect.y = 2000
-        scissors_image_rect.x = 2000
+        scissors_image_rect.x = 2000 
         scissors_image_rect.y = 2000
-        computer_choice = cpu_randchoice() 
-    elif player_choice == "Paper":
-        screen.blit(paper_image,paper_image_rect)
+        if computer_choice == "Rock":
+            cpu_rock_image_rect.x = 700
+            cpu_rock_image_rect.y = 150 
+            screen.blit(rock_image,cpu_rock_image_rect)
+            draw_text("ties with", 20 , WHITE , 600, 300)
+            draw_text("Tie Game!", 20 , WHITE, 600, 500)
+        if computer_choice == "Paper":
+            cpu_paper_image_rect.x = 700
+            cpu_paper_image_rect.y = 150 
+            screen.blit(paper_image,cpu_paper_image_rect)
+            draw_text("loses to", 20 , WHITE , 600, 300)
+            draw_text("You lost! :( ", 20 , WHITE, 600, 500)
+        if computer_choice == "Scissors": 
+            cpu_scissors_image_rect.x = 700
+            cpu_scissors_image_rect.y = 150 
+            screen.blit(scissors_image,cpu_scissors_image_rect)
+            draw_text("beats", 20 , WHITE , 600, 300)
+            draw_text("You Won! :) ", 20 , WHITE , 600, 500) 
+    
+    if player_choice == "Paper": 
         paper_image_rect.x = 100
         paper_image_rect.y = 150
         rock_image_rect.x = 2000
         rock_image_rect.y = 2000
-        scissors_image_rect.x = 2000
+        scissors_image_rect.x = 2000 
         scissors_image_rect.y = 2000
-        computer_choice = cpu_randchoice() 
-    elif player_choice == "Scissors":
-        screen.blit(scissors_image,scissors_image_rect)
+        if computer_choice == "Paper":
+            cpu_paper_image_rect.x = 700
+            cpu_paper_image_rect.y = 150 
+            screen.blit(paper_image,cpu_paper_image_rect)
+            draw_text("ties with", 20 , WHITE , 600, 300)
+            draw_text("Tie Game!", 20 , WHITE, 600, 500)
+        if computer_choice == "Scissors":
+            cpu_scissors_image_rect.x = 700
+            cpu_paper_image_rect.y = 150 
+            screen.blit(scissors_image,cpu_scissors_image_rect)
+            draw_text("loses to", 20 , WHITE , 600, 300)
+            draw_text("You lost! :( ", 20 , WHITE, 600, 500)
+        if computer_choice == "Rock": 
+            cpu_rock_image_rect.x = 700
+            cpu_rock_image_rect.y = 150 
+            screen.blit(rock_image,cpu_rock_image_rect)
+            draw_text("beats", 20 , WHITE , 600, 300)
+            draw_text("You Won! :) ", 20 , WHITE , 600, 500) 
+    
+    if player_choice == "Scissors": 
         scissors_image_rect.x = 100
         scissors_image_rect.y = 150
         rock_image_rect.x = 2000
         rock_image_rect.y = 2000
-        scissors_image_rect.x = 2000
-        scissors_image_rect.y = 2000
-        computer_choice = cpu_randchoice() 
-    else: 
-        print("Please pick a choice... ")
+        paper_image_rect.x = 2000 
+        paper_image_rect.y = 2000
+        if computer_choice == "Scissors":
+            cpu_scissors_image_rect.x = 700
+            cpu_scissors_image_rect.y = 150 
+            screen.blit(scissors_image,cpu_scissors_image_rect)
+            draw_text("ties with", 20 , WHITE , 600, 300)
+            draw_text("Tie Game!", 20 , WHITE, 600, 500)
+        if computer_choice == "Rock":
+            cpu_rock_image_rect.x = 700
+            cpu_rock_image_rect.y = 150 
+            screen.blit(rock_image,cpu_rock_image_rect)
+            draw_text("loses to", 20 , WHITE , 600, 300)
+            draw_text("You lost! :( ", 20 , WHITE, 600, 500)
+        if computer_choice == "Paper": 
+            cpu_paper_image_rect.x = 700
+            cpu_paper_image_rect.y = 150 
+            screen.blit(paper_image,cpu_paper_image_rect)
+            draw_text("beats", 20 , WHITE , 600, 300)
+            draw_text("You Won! :) ", 20 , WHITE , 600, 500)
+
+    
         
-
-    if computer_choice == choices[0]:
-        screen.blit(rock_image,rock_image_rect)
-        rock_image_rect.x = 800
-        rock_image_rect.y = 150 
-    elif computer_choice == choices[1]:
-        screen.blit(paper_image,paper_image_rect)
-        paper_image_rect.x = 800
-        paper_image_rect.y = 150 
-    elif computer_choice == choices[2]:
-        screen.blit(scissors_image,scissors_image_rect)
-        scissors_image_rect.x = 800
-        scissors_image_rect.y = 150 
-    else: 
-        break
-            
-    '''
-
+    pg.display.flip()
     pg.QUIT 
-
-
- 
-
-
-
-
-    
-    
-    
-
-        
-
