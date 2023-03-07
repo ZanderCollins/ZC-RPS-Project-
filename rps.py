@@ -18,17 +18,21 @@ import os
 game_folder = os.path.dirname(__file__)
 print(game_folder)
 
+# globalizes the set of variables used across the code
 global player_choice
 global computer_choice
 player_choice = ""
 computer_choice = ""
+# variabel that is a string of the 3 choices
 choices = ["Rock", "Paper", "Scissors"]
 
+# function that randomly chooses for the computer
 def cpu_randchoice():
     computer_choice = (choices[randint(0,2)])
     print("The computer randomly chose " + computer_choice + ".")
     return computer_choice 
 
+# function that allows for text to be displayed in the screen
 def draw_text(text, size, color, x, y):
     font_name = pg.font.match_font('times new roman')
     font = pg.font.Font(font_name, size)
@@ -37,13 +41,6 @@ def draw_text(text, size, color, x, y):
     text_rect.midtop = (x,y)
     screen.blit(text_surface, text_rect)
 
-def run_once(f):
-    def wrapper(*args, **kwargs):
-        if not wrapper.has_run:
-            wrapper.has_run = True
-            return f(*args, **kwargs)
-    wrapper.has_run = False
-    return wrapper
 
 # game settings
 WIDTH = 1280
@@ -66,6 +63,7 @@ pg.display.set_caption("Rock, Paper, Scissors")
 clock = pg.time.Clock()
 # loads the chosen file and stores the image data
 # allows for the image data (pixel location,number,color) to be changed
+# same classification and loading for all 6 images used
 rock_image = pg.image.load(os.path.join(game_folder,'Rock.jpg')).convert()
 rock_image_rect = rock_image.get_rect()
 
@@ -84,14 +82,16 @@ scissors_image_rect = scissors_image.get_rect()
 cpu_scissors_image = pg.image.load(os.path.join(game_folder,'Scissors_cpu.jpg')).convert()
 cpu_scissors_image_rect = cpu_scissors_image.get_rect()
 
+play_again_image = pg.image.load(os.path.join(game_folder,'play_again.png')).convert()
+play_again_image_rect = play_again_image.get_rect()
 
 
-
-# boulean loop for if the program is running
+# boolean value for if the program is running
 running = True 
-game_start = True 
+# boolean value for if the game has started
+game_start = True
 
-
+# while loop, runs the program
 while running: 
     clock.tick(FPS) 
 
@@ -110,7 +110,9 @@ while running:
             print(pg.mouse.get_pos()[1])
             # assigns variable to mouse coordinate touple
             mouse_coords = pg.mouse.get_pos()
-            # returns boolean value for clicking on image 
+            # returns boolean value for clicking on image
+            # assigns player choice based on coordinates of mouse click 
+            # also has computer choose randomly when player chooses 
             print(rock_image_rect.collidepoint(mouse_coords))
             if rock_image_rect.collidepoint(mouse_coords):
                 print("Player choice = Rock ")
@@ -132,7 +134,8 @@ while running:
     ######## draw ###########
     # fill background with black 
     screen.fill(BLACK)
-    
+
+    # sets the location data for the images when the program starts 
     if  game_start == True: 
         screen.blit(rock_image, rock_image_rect)
         rock_image_rect.x = 50
@@ -144,6 +147,8 @@ while running:
         scissors_image_rect.x = 400
         scissors_image_rect.y = 400
 
+    # sets the location data for the images and text if the player clicks on nothing 
+    # draws text on screen to tell player to pick a choice
     if player_choice == "": 
         screen.blit(rock_image, rock_image_rect)
         rock_image_rect.x = 50
@@ -156,6 +161,7 @@ while running:
         scissors_image_rect.y = 400
         draw_text("Click to choose:", 30, WHITE, 625, 200)
 
+    # sets the location of the images if the player chooses rock 
     if player_choice == "Rock": 
         rock_image_rect.x = 100
         rock_image_rect.y = 150
@@ -163,25 +169,31 @@ while running:
         paper_image_rect.y = 2000
         scissors_image_rect.x = 2000 
         scissors_image_rect.y = 2000
+        # sets the image location based on if the computer chooses rock, paper, or scissors
+        # draws text that gives the results of the game based on the comparison of the user and computer choice 
+        # the three below handle the result of each choice combination
         if computer_choice == "Rock":
             cpu_rock_image_rect.x = 700
             cpu_rock_image_rect.y = 150 
             screen.blit(rock_image,cpu_rock_image_rect)
             draw_text("ties with", 20 , WHITE , 600, 300)
             draw_text("Tie Game!", 20 , WHITE, 600, 500)
+     
         if computer_choice == "Paper":
             cpu_paper_image_rect.x = 700
             cpu_paper_image_rect.y = 150 
             screen.blit(paper_image,cpu_paper_image_rect)
             draw_text("loses to", 20 , WHITE , 600, 300)
             draw_text("You lost! :( ", 20 , WHITE, 600, 500)
+             
         if computer_choice == "Scissors": 
             cpu_scissors_image_rect.x = 700
             cpu_scissors_image_rect.y = 150 
             screen.blit(scissors_image,cpu_scissors_image_rect)
             draw_text("beats", 20 , WHITE , 600, 300)
             draw_text("You Won! :) ", 20 , WHITE , 600, 500) 
-    
+            
+    # sets the location of the images if the player chooses paper 
     if player_choice == "Paper": 
         paper_image_rect.x = 100
         paper_image_rect.y = 150
@@ -189,25 +201,31 @@ while running:
         rock_image_rect.y = 2000
         scissors_image_rect.x = 2000 
         scissors_image_rect.y = 2000
+        # sets the image location based on if the computer chooses rock, paper, or scissors
+        # draws text that gives the results of the game based on the comparison of the user and computer choice 
+        # the three below handle the result of each choice combination
         if computer_choice == "Paper":
             cpu_paper_image_rect.x = 700
             cpu_paper_image_rect.y = 150 
             screen.blit(paper_image,cpu_paper_image_rect)
             draw_text("ties with", 20 , WHITE , 600, 300)
             draw_text("Tie Game!", 20 , WHITE, 600, 500)
+             
         if computer_choice == "Scissors":
             cpu_scissors_image_rect.x = 700
-            cpu_paper_image_rect.y = 150 
+            cpu_paper_image_rect.y = 150
             screen.blit(scissors_image,cpu_scissors_image_rect)
             draw_text("loses to", 20 , WHITE , 600, 300)
             draw_text("You lost! :( ", 20 , WHITE, 600, 500)
+            
         if computer_choice == "Rock": 
             cpu_rock_image_rect.x = 700
             cpu_rock_image_rect.y = 150 
             screen.blit(rock_image,cpu_rock_image_rect)
             draw_text("beats", 20 , WHITE , 600, 300)
             draw_text("You Won! :) ", 20 , WHITE , 600, 500) 
-    
+            
+    # sets the location of the images if the player chooses scissors
     if player_choice == "Scissors": 
         scissors_image_rect.x = 100
         scissors_image_rect.y = 150
@@ -215,26 +233,31 @@ while running:
         rock_image_rect.y = 2000
         paper_image_rect.x = 2000 
         paper_image_rect.y = 2000
+        # sets the image location based on if the computer chooses rock, paper, or scissors
+        # draws text that gives the results of the game based on the comparison of the user and computer choice 
+        # the three chunks below handle the result of each choice combination
         if computer_choice == "Scissors":
             cpu_scissors_image_rect.x = 700
             cpu_scissors_image_rect.y = 150 
             screen.blit(scissors_image,cpu_scissors_image_rect)
             draw_text("ties with", 20 , WHITE , 600, 300)
             draw_text("Tie Game!", 20 , WHITE, 600, 500)
+             
         if computer_choice == "Rock":
             cpu_rock_image_rect.x = 700
             cpu_rock_image_rect.y = 150 
             screen.blit(rock_image,cpu_rock_image_rect)
             draw_text("loses to", 20 , WHITE , 600, 300)
             draw_text("You lost! :( ", 20 , WHITE, 600, 500)
+             
         if computer_choice == "Paper": 
             cpu_paper_image_rect.x = 700
             cpu_paper_image_rect.y = 150 
             screen.blit(paper_image,cpu_paper_image_rect)
             draw_text("beats", 20 , WHITE , 600, 300)
             draw_text("You Won! :) ", 20 , WHITE , 600, 500)
+             
 
-    
-        
     pg.display.flip()
+    # quits the program 
     pg.QUIT 
